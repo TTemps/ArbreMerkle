@@ -6,6 +6,15 @@ import java.util.ArrayList;
 public class TTH {
     // M message binary
     private ArrayList<String> M = new ArrayList<String>();
+    private String[][] matrix;
+
+    public String[][] getMatrix() {
+        return this.matrix;
+    }
+
+    public void setMatrix(String[][] matrix) {
+        this.matrix = matrix;
+    }
 
     public ArrayList<String> getM() {
         return this.M;
@@ -42,6 +51,41 @@ public class TTH {
         }
     }
 
+    // method b
+    // split M into 5*5 matrix and store them in a 2D array
+    public String[][] split() {
+        String[][] matrix = new String[5][5];
+        int i = 0;
+        int j = 0;
+        for (String string : this.M) {
+            matrix[i][j] = string;
+            j++;
+            if (j == 5) {
+                i++;
+                j = 0;
+            }
+            if (i == 5) {
+                break;
+            }
+        }
+        displayBlock(matrix);
+        return matrix;
+    }
+
+    // display block 
+    public void displayBlock(String[][] block) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                System.out.print(block[i][j] + " ");
+            }
+            System.out.println();
+
+        }
+    }
+
+    // method c
+    // do sum of each column modulo 64
+
     public void display() {
         System.out.println("M: " + this.M);
     }
@@ -51,5 +95,6 @@ public class TTH {
         tth.init();
         tth.padding();
         tth.display();
+        tth.split();
     }
 }
