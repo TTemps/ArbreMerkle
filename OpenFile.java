@@ -5,7 +5,7 @@ import java.io.FileReader;
 public class OpenFile {
     public static void main(String args[]) {
         try {
-            File fil = new File("/Users/john/Desktop/demo2.txt");
+            File fil = new File("texte.txt");
             BufferedReader br = new BufferedReader(new FileReader(fil));
             System.out.println("file content: ");
             int r = 0;
