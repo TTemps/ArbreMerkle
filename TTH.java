@@ -66,14 +66,13 @@ public class TTH {
             }
             matrixList.add(matrix);
         }
-        displayBlock(matrixList);
         return matrixList;
     }
 
     // method C
     // sums the elements of each column, then mod 64 the result and finally store
     // them in a 1D array
-    public String[] sumColumn(String[][] matrix) {
+    public String[] empreinteBlock(String[][] matrix) {
         String[] sum = new String[5];
         for (int i = 0; i < 5; i++) {
             int sumCol = 0;
@@ -122,16 +121,69 @@ public class TTH {
         return sum;
     }
 
-    // thanks to sumColumn sums the columns of each block
-    public ArrayList<String[]> footprintBlock(ArrayList<String[][]> blocks) {
-        String[] sum = new String[5];
-        ArrayList<String[]> footprint = new ArrayList<String[]>();
-        for (String[][] matrice : blocks) {
-            sum = sumColumn(matrice);
-            footprint.add(sum);
-            sum = null;
+    // method D
+    // each row of the matrix is circularly shifted to the left of its index number
+    public String[][] shiftRow(String[][] matrix) {
+        String[][] shifted = new String[5][5];
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                int shift = ((j - i) % 5);
+                if (shift < 0) {
+                    shift += 5;
+                }
+                shifted[i][j] = matrix[i][shift];
+            }
         }
-        return footprint;
+        return shifted;
+    }
+
+    public String[] empreinteNext(String[] empreinte, String[][] matrice) {
+        String[] sum = new String[5];
+        for (int i = 0; i < 5; i++) {
+            int sumCol = 0;
+            for (int j = 0; j < 5; j++) {
+                sumCol += Integer.parseInt(matrice[j][i]);
+            }
+            sum[i] = Integer.toString((sumCol + Integer.parseInt(empreinte[i])) % 64);
+        }
+        for (int i = 0; i < sum.length; i++) {
+            switch (sum[i]) {
+                case "0":
+                    sum[i] = "00";
+                    break;
+                case "1":
+                    sum[i] = "01";
+                    break;
+                case "2":
+                    sum[i] = "02";
+                    break;
+                case "3":
+                    sum[i] = "03";
+                    break;
+                case "4":
+                    sum[i] = "04";
+                    break;
+                case "5":
+                    sum[i] = "05";
+                    break;
+                case "6":
+                    sum[i] = "06";
+                    break;
+                case "7":
+                    sum[i] = "07";
+                    break;
+                case "8":
+                    sum[i] = "08";
+                    break;
+                case "9":
+                    sum[i] = "09";
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        return sum;
     }
 
     public void display() {
@@ -174,6 +226,38 @@ public class TTH {
         tth.init();
         tth.padding();
         tth.display();
-        tth.displayFootprint(tth.footprintBlock(tth.split()));
+        ArrayList<String[][]> blocks = tth.split();
+        System.out.println("blocks");
+        tth.displayBlock(blocks);
+        boolean firstblock = true;
+        String[] empreinte = new String[5];
+        String[][] shiftedBlock;
+        for (String[][] strings : blocks) {
+
+            if (firstblock == true) {
+                firstblock = false;
+                empreinte = tth.empreinteBlock(strings);
+                System.out.println("Empreinte du premier block:");
+                tth.displaySum(empreinte);
+                shiftedBlock = tth.shiftRow(strings);
+                System.out.println("Premier block shifted:");
+                tth.displayMatrix(shiftedBlock);
+                empreinte = tth.empreinteNext(empreinte, shiftedBlock);
+                System.out.println("Nouvelle empreinte 1er block:");
+                tth.displaySum(empreinte);
+
+            } else {
+                System.out.println("Empreinte envoye");
+                tth.displaySum(empreinte);
+                String[] prevEmpreinte = empreinte;
+                shiftedBlock = tth.shiftRow(strings);
+                System.out.println("Bloc shifted:");
+                tth.displayMatrix(shiftedBlock);
+                empreinte = tth.empreinteNext(prevEmpreinte, strings);
+                System.out.println("Nouvelle empreinte:");
+                tth.displaySum(empreinte);
+            }
+
+        }
     }
 }
